@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { serializeOpportunity } from "../lib/serialize";
 import { asyncHandler } from "../utils/asyncHandler";
@@ -56,7 +57,7 @@ opportunitiesRouter.get(
     const featured = String(req.query.featured ?? "");
     const includeExpired = String(req.query.includeExpired ?? "") === "true";
 
-    const where: Record<string, unknown> = {
+    const where: Prisma.OpportunityWhereInput = {
       status: includeExpired ? { in: ["published", "expired"] } : "published",
       ...(includeExpired ? {} : { deadline: { gte: new Date() } }),
     };
@@ -91,7 +92,9 @@ opportunitiesRouter.get(
       where.AND = [...((where.AND as unknown[]) ?? []), { skills: { contains: skill } }];
     }
 
-    let orderBy: Record<string, string> | Record<string, string>[] = { createdAt: "desc" };
+    let orderBy: Prisma.OpportunityOrderByWithRelationInput | Prisma.OpportunityOrderByWithRelationInput[] = {
+      createdAt: "desc",
+    };
     if (sort === "deadline") orderBy = { deadline: "asc" };
     if (sort === "popular") orderBy = [{ viewCount: "desc" }, { createdAt: "desc" }];
 
@@ -305,7 +308,20 @@ opportunitiesRouter.put(
     const opportunity = await prisma.opportunity.update({
       where: { id },
       data: {
-        ...data,
+        title: data.title,
+        category: data.category,
+        description: data.description,
+        requirements: data.requirements,
+        benefits: data.benefits,
+        applicationProcess: data.applicationProcess,
+        location: data.location,
+        opportunityType: data.opportunityType,
+        fundingType: data.fundingType,
+        educationLevel: data.educationLevel,
+        field: data.field,
+        applicationUrl: data.applicationUrl || undefined,
+        applicationMode: data.applicationMode,
+        contactEmail: data.contactEmail || undefined,
         requiredDocuments: data.requiredDocuments ? JSON.stringify(data.requiredDocuments) : undefined,
         skills: data.skills ? JSON.stringify(data.skills) : undefined,
         openingDate: data.openingDate ? new Date(data.openingDate) : undefined,

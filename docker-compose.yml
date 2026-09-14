@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hoh
+      POSTGRES_PASSWORD: hoh
+      POSTGRES_DB: hoh
+    ports:
+      - "5432:5432"
+    volumes:
+      - hoh_pg:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://hoh:hoh@db:5432/hoh
+      SECRET_KEY: change-me
+      JWT_SECRET: change-me
+      FRONTEND_URL: http://localhost:3000
+      BACKEND_URL: http://localhost:4000
+      PORT: 4000
+    ports:
+      - "4000:4000"
+
+volumes:
+  hoh_pg:

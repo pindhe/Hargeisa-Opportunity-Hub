@@ -1,0 +1,15 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+*.db
+*.db-journal
+.env
+.env.local
+uploads
+backend/prisma/dev.db
+backend/prisma/dev.db-journal
+frontend/.next
+.DS_Store
+npm-debug.log*
