@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { api, API_URL } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { useI18n } from "@/lib/i18n";
 import type { Opportunity } from "@/lib/types";
@@ -204,7 +204,6 @@ export default function OpportunityDetailPage() {
           </div>
         ) : null}
         {user ? null : <p className="mt-4 text-sm text-slate-500">Log in to save, track applications and check eligibility.</p>}
-        <p className="mt-6 text-xs text-slate-400">API: {API_URL}</p>
       </div>
     </div>
   );
