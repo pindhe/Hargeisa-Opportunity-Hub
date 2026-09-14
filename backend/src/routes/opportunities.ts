@@ -77,19 +77,26 @@ opportunitiesRouter.get(
 
     if (q) {
       await prisma.searchLog.create({ data: { userId: req.user?.id ?? null, query: q } }).catch(() => undefined);
-      where.OR = [
-        { title: { contains: q } },
-        { description: { contains: q } },
-        { field: { contains: q } },
-        { location: { contains: q } },
-        { category: { contains: q } },
-        { organization: { name: { contains: q } } },
-        { tags: { some: { tag: { contains: q } } } },
-        { skills: { contains: q } },
+      const words = q.split(/\s+/).filter((word) => word.length > 1);
+      const terms = words.length ? words : [q];
+      where.AND = [
+        ...((where.AND as Prisma.OpportunityWhereInput[]) ?? []),
+        ...terms.map((word) => ({
+          OR: [
+            { title: { contains: word } },
+            { description: { contains: word } },
+            { field: { contains: word } },
+            { location: { contains: word } },
+            { category: { contains: word } },
+            { organization: { name: { contains: word } } },
+            { tags: { some: { tag: { contains: word } } } },
+            { skills: { contains: word } },
+          ],
+        })),
       ];
     }
     if (skill) {
-      where.AND = [...((where.AND as unknown[]) ?? []), { skills: { contains: skill } }];
+      where.AND = [...((where.AND as Prisma.OpportunityWhereInput[]) ?? []), { skills: { contains: skill } }];
     }
 
     let orderBy: Prisma.OpportunityOrderByWithRelationInput | Prisma.OpportunityOrderByWithRelationInput[] = {
