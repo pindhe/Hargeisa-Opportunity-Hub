@@ -30,11 +30,10 @@ export default function AssistantPage() {
         message,
         conversation_id: conversationId,
       })).data,
-    onSuccess: (data, message) => {
+    onSuccess: (data) => {
       setConversationId(data.conversation_id);
       setMessages((current) => [
         ...current,
-        { id: `${Date.now()}-u`, role: "user", content: message, opportunities: [] },
         { id: `${Date.now()}-a`, role: "assistant", content: data.reply, opportunities: data.opportunities },
       ]);
       void queryClient.invalidateQueries({ queryKey: ["conversations"] });
@@ -56,6 +55,7 @@ export default function AssistantPage() {
     const message = (preset ?? draft).trim();
     if (!message || send.isPending) return;
     setDraft("");
+    setMessages((current) => [...current, { id: `${Date.now()}-u`, role: "user", content: message, opportunities: [] }]);
     send.mutate(message);
   }
 

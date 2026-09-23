@@ -31,7 +31,7 @@ export function OpportunityView({ slug }: { slug: string }) {
   const [description, setDescription] = useState("");
   const detail = useQuery({
     queryKey: ["opportunity", slug],
-    queryFn: async () => (await api.get<Opportunity>(`/api/opportunities/${slug}`)).data,
+    queryFn: async () => (await api.get<Opportunity>(`/api/opportunities/${slug}?count=true`)).data,
   });
   const related = useQuery({
     queryKey: ["related", slug],

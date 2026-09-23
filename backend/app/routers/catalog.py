@@ -128,11 +128,16 @@ def list_opportunities(
 
 
 @router.get("/opportunities/{slug}", response_model=OpportunityDetail)
-def opportunity_detail(slug: str, db: Session = Depends(get_db), user: User | None = Depends(get_optional_user)) -> OpportunityDetail:
+def opportunity_detail(
+    slug: str,
+    count: bool = False,
+    db: Session = Depends(get_db),
+    user: User | None = Depends(get_optional_user),
+) -> OpportunityDetail:
     opp = opportunity_query(db).filter(Opportunity.slug == slug).first()
     if opp is None or (opp.status != OpportunityStatus.APPROVED.value and (user is None or user.role != "ADMIN")):
         raise HTTPException(status_code=404, detail="Opportunity not found")
-    if opp.status == OpportunityStatus.APPROVED.value:
+    if count and opp.status == OpportunityStatus.APPROVED.value:
         opp.views += 1
         db.commit()
         db.refresh(opp)

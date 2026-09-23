@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 
 import { AuthFrame } from "@/components/auth-frame";
@@ -20,10 +20,9 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-function LoginForm() {
+export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
-  const params = useSearchParams();
   const [formError, setFormError] = useState("");
   const form = useForm<FormValues>({ resolver: zodResolver(schema), defaultValues: { email: "", password: "" } });
 
@@ -35,7 +34,7 @@ function LoginForm() {
           setFormError("");
           try {
             const user = await login(values.email, values.password);
-            const next = params.get("next");
+            const next = new URLSearchParams(window.location.search).get("next");
             if (user.role === "ADMIN") router.push(next?.startsWith("/admin") ? next : "/admin");
             else if (!user.onboarding_complete) router.push("/onboarding");
             else router.push(next && next.startsWith("/") ? next : "/dashboard");
@@ -71,10 +70,3 @@ function LoginForm() {
   );
 }
 
-export default function LoginPage() {
-  return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
-  );
-}
