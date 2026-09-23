@@ -198,7 +198,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl px-4 pb-8">
         <div className="overflow-hidden rounded-[2rem] bg-primary px-6 py-10 text-primary-foreground md:px-10">
           <h2 className="max-w-xl font-display text-4xl leading-tight">Your next opportunity is already listed.</h2>
-          <p className="mt-3 max-w-xl text-emerald-50/90">Build a profile and HOH will keep the relevant scholarships, internships, and jobs in front of you.</p>
+          <p className="mt-3 max-w-xl text-primary-foreground/80">Build a profile and HOH will keep the relevant scholarships, internships, and jobs in front of you.</p>
           <Button asChild className="mt-6 bg-white text-ink hover:bg-emerald-50">
             <Link href="/register">Create Profile</Link>
           </Button>
