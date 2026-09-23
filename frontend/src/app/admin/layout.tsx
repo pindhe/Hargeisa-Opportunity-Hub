@@ -26,7 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <RequireAuth admin>
       <div className="min-h-screen bg-background text-foreground md:grid md:grid-cols-[240px_1fr]">
-        <aside className="border-r border-border bg-ink text-white md:min-h-screen">
+        <aside className="border-r border-border bg-card text-foreground md:min-h-screen">
           <Link href="/" className="block px-5 py-5 font-display text-2xl">HOH Admin</Link>
           <nav className="flex gap-1 overflow-auto px-3 pb-4 md:block md:space-y-1">
             {links.map(([href, label]) => {
@@ -34,14 +34,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               const exactOpp = href === "/admin/opportunities" && (pathname === href || pathname.includes("/edit"));
               const isActive = href === "/admin/opportunities" ? exactOpp : active;
               return (
-                <Link key={href} href={href} className={cn("block whitespace-nowrap rounded-xl px-3 py-2 text-sm text-white/75 hover:bg-white/10", isActive && "bg-white/10 text-white")}>
+                <Link key={href} href={href} className={cn("block whitespace-nowrap rounded-xl px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground", isActive && "bg-muted text-foreground")}>
                   {label}
                 </Link>
               );
             })}
           </nav>
           <div className="px-3 py-4">
-            <ThemeToggle className="text-white hover:bg-white/10" />
+            <ThemeToggle />
           </div>
         </aside>
         <div className="px-4 py-6 md:px-8">{children}</div>
