@@ -8,6 +8,7 @@ import { ArrowRight, BadgeCheck, Search } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 import { CategoryIcon } from "@/components/category-icon";
+import { Logo } from "@/components/logo";
 import { OpportunityCard, OrgMark } from "@/components/opportunity-card";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -60,6 +61,9 @@ export default function HomePage() {
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         <div className="relative mx-auto flex w-full max-w-3xl flex-col items-center px-4 py-24 text-center">
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <Logo tone="onDark" size="lg" />
+          </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}

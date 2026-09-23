@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
+import { Logo } from "@/components/logo";
 import { OpportunityCard } from "@/components/opportunity-card";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -76,9 +77,12 @@ export default function AssistantPage() {
         </div>
       </aside>
       <section className="flex min-h-[70vh] flex-col rounded-[2rem] border border-border bg-card">
-        <header className="border-b border-border px-5 py-4">
-          <h1 className="font-display text-2xl">HOH AI Assistant</h1>
-          <p className="text-sm text-muted-foreground">Ask about approved opportunities, deadlines, and what fits your profile.</p>
+        <header className="flex items-center gap-4 border-b border-border px-5 py-4">
+          <Logo size="sm" />
+          <div>
+            <h1 className="font-display text-2xl">AI Assistant</h1>
+            <p className="text-sm text-muted-foreground">Ask about approved opportunities, deadlines, and what fits your profile.</p>
+          </div>
         </header>
         <div className="flex-1 space-y-4 overflow-auto px-5 py-5">
           {messages.length === 0 && (

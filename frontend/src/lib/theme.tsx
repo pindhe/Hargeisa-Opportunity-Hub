@@ -19,6 +19,18 @@ const ThemeContext = createContext<ThemeContextValue>({
 function applyTheme(theme: Theme) {
   document.documentElement.classList.toggle("dark", theme === "dark");
   document.documentElement.style.colorScheme = theme;
+  const href = theme === "dark" ? "/icon-dark.png" : "/icon-light.png";
+  const links = document.querySelectorAll<HTMLLinkElement>('link[rel="icon"]');
+  if (links.length === 0) {
+    const link = document.createElement("link");
+    link.rel = "icon";
+    link.href = href;
+    document.head.appendChild(link);
+    return;
+  }
+  links.forEach((link) => {
+    link.href = href;
+  });
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

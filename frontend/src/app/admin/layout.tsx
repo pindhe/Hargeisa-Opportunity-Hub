@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { RequireAuth } from "@/components/guard";
+import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +28,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <RequireAuth admin>
       <div className="min-h-screen bg-background text-foreground md:grid md:grid-cols-[240px_1fr]">
         <aside className="border-r border-border bg-card text-foreground md:min-h-screen">
-          <Link href="/" className="block px-5 py-5 font-display text-2xl">HOH Admin</Link>
+          <Link href="/" className="block px-5 py-5">
+            <Logo size="sm" />
+            <p className="mt-2 text-xs font-medium tracking-[0.14em] text-muted-foreground uppercase">Admin</p>
+          </Link>
           <nav className="flex gap-1 overflow-auto px-3 pb-4 md:block md:space-y-1">
             {links.map(([href, label]) => {
               const active = href === "/admin" ? pathname === href : pathname === href || (href !== "/admin/opportunities" && pathname.startsWith(href));

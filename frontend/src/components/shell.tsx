@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Bell, Menu, Search, X } from "lucide-react";
+import { Bell, Building2, Compass, LayoutDashboard, LayoutGrid, LogIn, LogOut, Menu, Search, Shield, Sparkles, UserPlus, X } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -14,10 +15,10 @@ import type { Notification } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/opportunities", label: "Explore" },
-  { href: "/categories", label: "Categories" },
-  { href: "/organizations", label: "Organizations" },
-  { href: "/ai-assistant", label: "AI Assistant" },
+  { href: "/opportunities", label: "Explore", icon: Compass },
+  { href: "/categories", label: "Categories", icon: LayoutGrid },
+  { href: "/organizations", label: "Organizations", icon: Building2 },
+  { href: "/ai-assistant", label: "AI Assistant", icon: Sparkles },
 ];
 
 export function Shell({ children }: { children: React.ReactNode }) {
@@ -51,10 +52,9 @@ function Navbar() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/90 text-foreground backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">H</span>
-          HOH
+      <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4">
+        <Link href="/" className="flex items-center" aria-label="HOH home">
+          <Logo size="sm" />
         </Link>
         <nav className="ml-4 hidden items-center gap-1 md:flex">
           {links.map((link) => (
@@ -62,10 +62,11 @@ function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
-                pathname.startsWith(link.href) && "bg-muted text-foreground",
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
+                pathname.startsWith(link.href) && "bg-accent text-primary",
               )}
             >
+              <link.icon className="h-4 w-4" />
               {link.label}
             </Link>
           ))}
@@ -124,19 +125,27 @@ function Navbar() {
           {ready && user ? (
             <>
               <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
-                <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"}>{user.role === "ADMIN" ? "Admin" : "Dashboard"}</Link>
+                <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"}>
+                  {user.role === "ADMIN" ? <Shield className="h-4 w-4" /> : <LayoutDashboard className="h-4 w-4" />}
+                  {user.role === "ADMIN" ? "Admin" : "Dashboard"}
+                </Link>
               </Button>
-              <button type="button" className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline" onClick={logout}>
+              <button type="button" className="hidden items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:inline-flex" onClick={logout}>
+                <LogOut className="h-4 w-4" />
                 Log out
               </button>
             </>
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
-              <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground">
+              <Link href="/login" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+                <LogIn className="h-4 w-4" />
                 Log in
               </Link>
               <Button asChild size="sm">
-                <Link href="/register">Create profile</Link>
+                <Link href="/register">
+                  <UserPlus className="h-4 w-4" />
+                  Create profile
+                </Link>
               </Button>
             </div>
           )}
@@ -148,16 +157,19 @@ function Navbar() {
       {open && (
         <div className="space-y-1 border-t border-border px-4 py-3 md:hidden">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="block rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+            <Link key={link.href} href={link.href} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+              <link.icon className="h-4 w-4 text-primary" />
               {link.label}
             </Link>
           ))}
           {user ? (
-            <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="block rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+            <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+              {user.role === "ADMIN" ? <Shield className="h-4 w-4 text-primary" /> : <LayoutDashboard className="h-4 w-4 text-primary" />}
               {user.role === "ADMIN" ? "Admin" : "Dashboard"}
             </Link>
           ) : (
-            <Link href="/login" className="block rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+            <Link href="/login" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+              <LogIn className="h-4 w-4 text-primary" />
               Log in
             </Link>
           )}
@@ -172,7 +184,7 @@ function Footer() {
     <footer className="mt-16 border-t border-border bg-card">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-4">
         <div className="md:col-span-2">
-          <p className="font-display text-xl">HOH</p>
+          <Logo size="md" />
           <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
             Hargeisa Opportunity Hub brings scholarships, jobs, internships, courses, and competitions into one searchable place.
           </p>
