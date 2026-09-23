@@ -21,12 +21,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000.
 
-Demo accounts:
-
-- Student: `ayaan@uoh.edu.so` / `Student123!`
-- Admin: `admin@hargeisaopportunityhub.so` / `Admin123!`
 
 ## PostgreSQL
 

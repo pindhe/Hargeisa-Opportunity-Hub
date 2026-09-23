@@ -61,11 +61,6 @@ export default function LoginPage() {
         <Link href="/forgot-password" className="text-primary">Forgot password</Link>
         <Link href="/register" className="text-primary">Create profile</Link>
       </div>
-      <div className="mt-6 rounded-2xl bg-muted p-4 text-sm leading-6 text-muted-foreground">
-        <p className="font-medium text-foreground">Demo accounts</p>
-        <p>Student: ayaan@uoh.edu.so / Student123!</p>
-        <p>Admin: admin@hargeisaopportunityhub.so / Admin123!</p>
-      </div>
     </AuthFrame>
   );
 }
