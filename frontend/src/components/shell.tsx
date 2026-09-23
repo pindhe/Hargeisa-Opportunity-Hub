@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { AssistantWidget } from "@/components/assistant-widget";
 import { Logo } from "@/components/logo";
 import { SearchOverlay } from "@/components/search-overlay";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Bell, BookOpen, Briefcase, Compass, GraduationCap, Info, Laptop, Layers, LayoutDashboard, LogIn, LogOut, MapPin, Menu, Search, Shield, Sparkles, UserPlus, X } from "lucide-react";
+import { Bell, BookOpen, Briefcase, Compass, GraduationCap, Info, Laptop, Layers, LayoutDashboard, LogIn, LogOut, MapPin, Menu, Search, Shield, UserPlus, UserRound, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -38,21 +39,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("hoh-open-search", openSearch);
   }, []);
 
-  if (pathname.startsWith("/admin")) return <>{children}</>;
+  const bare = pathname === "/login" || pathname === "/register";
+  if (pathname.startsWith("/admin") || bare) return <>{children}</>;
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar onSearch={() => { setSearchQuery(""); setSearchOpen(true); }} />
       <main className="flex-1">{children}</main>
       <Footer onSearch={() => { setSearchQuery(""); setSearchOpen(true); }} />
-      {!pathname.startsWith("/ai-assistant") && (
-        <Link
-          href="/ai-assistant"
-          aria-label="AI Assistant"
-          className="fixed right-5 bottom-5 z-50 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_30px_-12px_rgba(12,107,88,0.8)]"
-        >
-          <Sparkles className="h-5 w-5" />
-        </Link>
-      )}
+      <AssistantWidget />
       <SearchOverlay open={searchOpen} initialQuery={searchQuery} onClose={closeSearch} />
     </div>
   );
@@ -150,9 +144,9 @@ function Navbar({ onSearch }: { onSearch: () => void }) {
           {ready && user ? (
             <>
               <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
-                <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"}>
-                  {user.role === "ADMIN" ? <Shield className="h-4 w-4" /> : <LayoutDashboard className="h-4 w-4" />}
-                  {user.role === "ADMIN" ? "Admin" : "Dashboard"}
+                <Link href={user.role === "ADMIN" ? "/admin" : "/profile"}>
+                  {user.role === "ADMIN" ? <Shield className="h-4 w-4" /> : <UserRound className="h-4 w-4" />}
+                  {user.role === "ADMIN" ? "Admin" : "Profile"}
                 </Link>
               </Button>
               <button type="button" className="hidden items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:inline-flex" onClick={logout}>
@@ -184,9 +178,9 @@ function Navbar({ onSearch }: { onSearch: () => void }) {
             </Link>
           ))}
           {user && (
-            <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
-              {user.role === "ADMIN" ? <Shield className="h-4 w-4 text-primary" /> : <LayoutDashboard className="h-4 w-4 text-primary" />}
-              {user.role === "ADMIN" ? "Admin" : "Dashboard"}
+            <Link href={user.role === "ADMIN" ? "/admin" : "/profile"} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
+              {user.role === "ADMIN" ? <Shield className="h-4 w-4 text-primary" /> : <UserRound className="h-4 w-4 text-primary" />}
+              {user.role === "ADMIN" ? "Admin" : "Profile"}
             </Link>
           )}
         </div>

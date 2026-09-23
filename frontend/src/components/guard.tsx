@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import { Loading } from "@/components/loading";
 import { useAuth } from "@/lib/auth";
 
 export function RequireAuth({ children, admin = false }: { children: React.ReactNode; admin?: boolean }) {
@@ -26,7 +27,7 @@ export function RequireAuth({ children, admin = false }: { children: React.React
   }, [admin, pathname, ready, router, user]);
 
   if (!ready || !user) {
-    return <p className="mx-auto max-w-6xl px-4 py-16 text-sm text-muted-foreground">Loading your account…</p>;
+    return <Loading label="Loading your account" />;
   }
   if (admin && user.role !== "ADMIN") return null;
   return <>{children}</>;

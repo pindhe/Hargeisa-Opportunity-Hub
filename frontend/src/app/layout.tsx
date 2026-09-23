@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Geist } from "next/font/google";
+import Script from "next/script";
 
 import { Providers } from "@/components/providers";
 import { Shell } from "@/components/shell";
@@ -18,11 +19,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geist.variable} ${display.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full bg-background text-foreground">
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("hoh-theme");var d=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");document.documentElement.style.colorScheme=d?"dark":"light";}catch(e){}})();`,
-          }}
-        />
+        <Script id="hoh-theme" strategy="beforeInteractive">
+          {`(function(){try{var t=localStorage.getItem("hoh-theme");var d=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");document.documentElement.style.colorScheme=d?"dark":"light";}catch(e){}})();`}
+        </Script>
         <Providers>
           <Shell>{children}</Shell>
         </Providers>

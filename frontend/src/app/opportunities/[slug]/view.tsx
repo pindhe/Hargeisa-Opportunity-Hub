@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { BadgeCheck, Bookmark, Share2 } from "lucide-react";
+import { BadgeCheck, Bookmark, MapPin, Share2 } from "lucide-react";
 import { useState } from "react";
 
 import { DeadlineBadge } from "@/components/deadline-badge";
+import { Loading } from "@/components/loading";
 import { OpportunityCard, OrgMark } from "@/components/opportunity-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/card";
@@ -17,7 +18,7 @@ import { useToast } from "@/components/providers";
 import { api, errorMessage } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { Opportunity } from "@/lib/types";
-import { formatDate, typeLabel } from "@/lib/utils";
+import { formatDate, mediaUrl, typeLabel } from "@/lib/utils";
 
 const reasons = ["Incorrect information", "Expired", "Spam", "Scam", "Other"];
 
@@ -59,57 +60,67 @@ export function OpportunityView({ slug }: { slug: string }) {
     void queryClient.invalidateQueries({ queryKey: ["opportunity", slug] });
   }
 
-  if (detail.isLoading) return <p className="px-4 py-16 text-sm text-muted-foreground">Loading opportunity…</p>;
+  if (detail.isLoading) return <Loading label="Loading opportunity" />;
   if (!opp) return <p className="px-4 py-16">This opportunity is not available.</p>;
 
+  const cover = opp.image ? mediaUrl(opp.image) : "/bghero-straight.jpg";
+
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <article className="rounded-[2rem] border border-border bg-card p-6 md:p-8">
-          <div className="flex items-start gap-4">
-            <OrgMark name={opp.organization.name} logo={opp.organization.logo} className="h-16 w-28" />
-            <div>
-              <Link href={`/organizations/${opp.organization.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-primary">
-                {opp.organization.name}
-                {opp.organization.verified && <BadgeCheck className="h-4 w-4" />}
-              </Link>
-              <h1 className="mt-1 font-display text-4xl leading-tight">{opp.title}</h1>
-            </div>
+    <div>
+      <section className="relative h-[28rem] overflow-hidden sm:h-[32rem]">
+        <img src={cover} alt="" className="absolute inset-0 h-full w-full object-cover object-[center_40%]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,21,16,0.15)_0%,rgba(7,21,16,0.2)_40%,rgba(7,21,16,0.82)_100%)]" />
+        <div className="relative mx-auto flex h-full max-w-6xl flex-col justify-end px-4 pb-10 text-white">
+          <div className="flex items-center gap-3">
+            <OrgMark name={opp.organization.name} logo={opp.organization.logo} className="h-12 w-12 bg-white" />
+            <Link href={`/organizations/${opp.organization.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-white">
+              {opp.organization.name}
+              {opp.organization.verified && <BadgeCheck className="h-4 w-4 text-emerald-200" />}
+            </Link>
           </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Badge>{opp.category.name}</Badge>
-            <Badge className="bg-muted text-foreground">{typeLabel(opp.opportunity_type)}</Badge>
-            <Badge className="bg-muted text-foreground">{opp.is_remote ? "Remote" : `${opp.location}, ${opp.country}`}</Badge>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight sm:text-5xl">{opp.title}</h1>
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur-sm">{opp.category.name}</span>
+            <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur-sm">{typeLabel(opp.opportunity_type)}</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur-sm">
+              <MapPin className="h-3.5 w-3.5" />
+              {opp.is_remote ? "Remote" : `${opp.location}, ${opp.country}`}
+            </span>
             <DeadlineBadge days={opp.days_remaining} />
           </div>
-          <p className="mt-5 text-lg leading-8 text-muted-foreground">{opp.short_description}</p>
-          <Section title="Description" body={opp.description} />
-          <Section title="Eligibility" body={opp.eligibility} />
-          <Section title="Requirements" body={opp.requirements} />
-          <Section title="Benefits" body={opp.benefits} />
-          <h2 className="mt-8 font-display text-2xl">Important dates</h2>
-          <dl className="mt-3 grid gap-3 sm:grid-cols-3">
+        </div>
+      </section>
+      <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[1fr_320px]">
+        <article className="rounded-[2rem] border border-border bg-card px-6 py-8 md:px-10">
+          <p className="max-w-2xl text-xl leading-9">{opp.short_description}</p>
+          <dl className="mt-8 grid gap-3 sm:grid-cols-3">
             <DateItem label="Deadline" value={formatDate(opp.deadline)} />
             <DateItem label="Starts" value={formatDate(opp.start_date)} />
             <DateItem label="Ends" value={formatDate(opp.end_date)} />
           </dl>
+          <Section title="Description" body={opp.description} />
+          <Section title="Eligibility" body={opp.eligibility} />
+          <Section title="Requirements" body={opp.requirements} />
+          <Section title="Benefits" body={opp.benefits} />
           {!!opp.skills?.length && (
-            <>
-              <h2 className="mt-8 font-display text-2xl">Skills</h2>
-              <div className="mt-3 flex flex-wrap gap-2">
+            <section className="mt-10 border-t border-border pt-8">
+              <h2 className="font-display text-2xl">Skills</h2>
+              <div className="mt-4 flex flex-wrap gap-2">
                 {opp.skills.map((skill) => (
                   <Badge key={skill}>{skill}</Badge>
                 ))}
               </div>
-            </>
+            </section>
           )}
-          <h2 className="mt-8 font-display text-2xl">Application process</h2>
-          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
-            <li>Check the eligibility and deadline on this page.</li>
-            <li>Open the official application link and submit there.</li>
-            <li>Save the opportunity and track the status on your HOH board.</li>
-          </ol>
-          <button type="button" className="mt-6 text-sm text-muted-foreground underline" onClick={() => (user ? setReportOpen(true) : (window.location.href = "/login"))}>
+          <section className="mt-10 border-t border-border pt-8">
+            <h2 className="font-display text-2xl">Application process</h2>
+            <ol className="mt-4 max-w-2xl list-decimal space-y-3 pl-5 text-base leading-8 text-foreground/80">
+              <li>Check the eligibility and deadline on this page.</li>
+              <li>Open the official application link and submit there.</li>
+              <li>Save the opportunity and track the status on your HOH board.</li>
+            </ol>
+          </section>
+          <button type="button" className="mt-8 text-sm text-muted-foreground underline" onClick={() => (user ? setReportOpen(true) : (window.location.href = "/login"))}>
             Report this listing
           </button>
         </article>
@@ -149,7 +160,7 @@ export function OpportunityView({ slug }: { slug: string }) {
           )}
         </aside>
       </div>
-      <section className="mt-10">
+      <section className="mx-auto mt-2 max-w-6xl px-4 pb-12">
         <h2 className="font-display text-3xl">Related opportunities</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {(related.data ?? []).map((item) => (
@@ -188,11 +199,21 @@ export function OpportunityView({ slug }: { slug: string }) {
 
 function Section({ title, body }: { title: string; body?: string }) {
   if (!body) return null;
+  const paragraphs = body
+    .split(/\n{2,}/)
+    .map((part) => part.trim())
+    .filter(Boolean);
   return (
-    <>
-      <h2 className="mt-8 font-display text-2xl">{title}</h2>
-      <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-muted-foreground">{body}</p>
-    </>
+    <section className="mt-10 border-t border-border pt-8">
+      <h2 className="font-display text-2xl">{title}</h2>
+      <div className="mt-4 max-w-2xl space-y-4">
+        {paragraphs.map((paragraph, index) => (
+          <p key={`${title}-${index}`} className="whitespace-pre-wrap text-base leading-8 text-foreground/85">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+    </section>
   );
 }
 

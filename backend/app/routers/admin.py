@@ -46,7 +46,7 @@ def _media(url: str | None) -> str | None:
     if not url or not url.strip():
         return None
     cleaned = url.strip()
-    if cleaned.startswith("/uploads/") or cleaned.startswith(("http://", "https://")):
+    if cleaned.startswith(("/uploads/", "/orgs/")) or cleaned.startswith(("http://", "https://")):
         return cleaned
     raise HTTPException(status_code=422, detail="Image must be an http(s) URL")
 

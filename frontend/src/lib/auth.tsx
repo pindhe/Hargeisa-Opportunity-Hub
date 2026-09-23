@@ -1,11 +1,30 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useLayoutEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { api } from "@/lib/api";
-import { setToken } from "@/lib/token";
+import { getToken, setToken } from "@/lib/token";
 import type { User } from "@/lib/types";
+
+const USER_KEY = "hoh_user";
+
+function readCachedUser() {
+  if (typeof window === "undefined" || !getToken()) return null;
+  const raw = window.localStorage.getItem(USER_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as User;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedUser(user: User | null) {
+  if (typeof window === "undefined") return;
+  if (user) window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+  else window.localStorage.removeItem(USER_KEY);
+}
 
 type AuthContextValue = {
   user: User | null;
@@ -23,15 +42,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
+  function commitUser(next: User | null) {
+    writeCachedUser(next);
+    setUserState(next);
+  }
+
+  useLayoutEffect(() => {
+    if (!getToken()) {
+      setReady(true);
+      return;
+    }
+    const cached = readCachedUser();
+    if (cached) {
+      setUserState(cached);
+      setReady(true);
+    }
     let active = true;
     api
       .get<User>("/api/auth/me")
       .then((response) => {
-        if (active) setUserState(response.data);
+        if (active) commitUser(response.data);
       })
       .catch(() => {
-        if (active) setUserState(null);
+        if (active && !cached) commitUser(null);
       })
       .finally(() => {
         if (active) setReady(true);
@@ -45,22 +78,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       user,
       ready,
-      setUser: setUserState,
+      setUser: commitUser,
       login: async (email, password) => {
         const response = await api.post<{ access_token: string; user: User }>("/api/auth/login", { email, password });
         setToken(response.data.access_token);
-        setUserState(response.data.user);
+        commitUser(response.data.user);
         return response.data.user;
       },
       register: async (payload) => {
         const response = await api.post<{ access_token: string; user: User }>("/api/auth/register", payload);
         setToken(response.data.access_token);
-        setUserState(response.data.user);
+        commitUser(response.data.user);
         return response.data.user;
       },
       logout: () => {
         setToken(null);
-        setUserState(null);
+        commitUser(null);
         router.push("/");
       },
     }),

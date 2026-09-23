@@ -15,7 +15,9 @@ export function useToast() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [client] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } } }));
+  const [client] = useState(
+    () => new QueryClient({ defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 30_000 } } }),
+  );
   const [toasts, setToasts] = useState<{ id: number; message: string }[]>([]);
 
   const toastValue = useMemo<ToastContextValue>(
