@@ -1,3 +1,5 @@
+![HOH — Hargeisa Opportunity Hub](HOH.png)
+
 # HOH — Hargeisa Opportunity Hub
 
 HOH collects scholarships, jobs, internships, courses, hackathons, and other opportunities for students and young professionals in Hargeisa and Somaliland. The Next.js frontend and FastAPI backend deploy separately.
