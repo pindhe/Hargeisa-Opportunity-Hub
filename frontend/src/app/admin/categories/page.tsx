@@ -24,7 +24,7 @@ export default function AdminCategoriesPage() {
   return (
     <div>
       <h1 className="font-display text-4xl">Categories</h1>
-      <form className="mt-4 grid gap-3 rounded-3xl border border-border bg-white p-4 md:grid-cols-2" onSubmit={(event) => { event.preventDefault(); save.mutate(); }}>
+      <form className="mt-4 grid gap-3 rounded-3xl border border-border bg-card p-4 md:grid-cols-2" onSubmit={(event) => { event.preventDefault(); save.mutate(); }}>
         <div><Label>Name</Label><Input value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required /></div>
         <div><Label>Icon</Label><Input value={form.icon} onChange={(event) => setForm({ ...form, icon: event.target.value })} /></div>
         <div><Label>Color</Label><Input value={form.color} onChange={(event) => setForm({ ...form, color: event.target.value })} /></div>
@@ -33,7 +33,7 @@ export default function AdminCategoriesPage() {
       </form>
       <div className="mt-4 space-y-2">
         {(categories.data ?? []).map((category) => (
-          <div key={category.id} className="flex items-center justify-between rounded-2xl border border-border bg-white px-4 py-3">
+          <div key={category.id} className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
             <div><p className="font-medium">{category.name}</p><p className="text-sm text-muted-foreground">{category.opportunity_count} opportunities</p></div>
             <div className="flex gap-2">
               <Button size="sm" variant="outline" onClick={() => { setEditing(category.id); setForm({ name: category.name, description: category.description, icon: category.icon, color: category.color }); }}>Edit</Button>

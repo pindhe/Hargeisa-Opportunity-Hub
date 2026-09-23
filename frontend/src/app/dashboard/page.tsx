@@ -40,7 +40,7 @@ function Dashboard() {
       <h1 className="font-display text-4xl">Welcome back, {user?.full_name.split(" ")[0]}</h1>
       <div className="mt-6 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {APPLICATION_STATUSES.map((status) => (
-          <Link key={status} href="/dashboard/applications" className="rounded-2xl border border-border bg-white p-3">
+          <Link key={status} href="/dashboard/applications" className="rounded-2xl border border-border bg-card p-3">
             <p className="text-2xl font-semibold">{counts[status] ?? 0}</p>
             <p className="text-xs text-muted-foreground">{statusLabel(status)}</p>
           </Link>
@@ -49,7 +49,7 @@ function Dashboard() {
       <Block title="Recommended for you" href="/opportunities?sort=recommended">
         <Grid items={recommended.data ?? []} empty="Complete your profile to see matches." />
         {recommended.data?.[0]?.recommendation_reason && (
-          <p className="mt-3 text-sm text-[#0a5748]">{recommended.data[0].recommendation_reason}</p>
+          <p className="mt-3 text-sm text-primary">{recommended.data[0].recommendation_reason}</p>
         )}
       </Block>
       <Block title="Closing soon" href="/opportunities?deadline=soon&sort=deadline">
@@ -65,7 +65,7 @@ function Dashboard() {
         </div>
         <div className="space-y-2">
           {(notes.data ?? []).slice(0, 4).map((item) => (
-            <Link key={item.id} href={item.link || "/notifications"} className="block rounded-2xl border border-border bg-white px-4 py-3">
+            <Link key={item.id} href={item.link || "/notifications"} className="block rounded-2xl border border-border bg-card px-4 py-3">
               <p className="font-medium">{item.title}</p>
               <p className="text-sm text-muted-foreground">{item.message}</p>
             </Link>
@@ -90,7 +90,7 @@ function Block({ title, href, children }: { title: string; href: string; childre
 }
 
 function Grid({ items, empty }: { items: Opportunity[]; empty: string }) {
-  if (items.length === 0) return <p className="rounded-3xl bg-white p-6 text-sm text-muted-foreground">{empty}</p>;
+  if (items.length === 0) return <p className="rounded-3xl bg-card p-6 text-sm text-muted-foreground">{empty}</p>;
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {items.slice(0, 4).map((item) => <OpportunityCard key={item.id} opportunity={item} />)}

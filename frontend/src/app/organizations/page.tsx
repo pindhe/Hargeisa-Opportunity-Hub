@@ -15,7 +15,7 @@ export default function OrganizationsPage() {
       <h1 className="font-display text-4xl">Organizations</h1>
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         {(organizations.data ?? []).map((org) => (
-          <Link key={org.id} href={`/organizations/${org.slug}`} className="flex gap-4 rounded-[1.7rem] border border-border bg-white p-5">
+          <Link key={org.id} href={`/organizations/${org.slug}`} className="flex gap-4 rounded-[1.7rem] border border-border bg-card p-5">
             <OrgMark name={org.name} />
             <div>
               <h2 className="flex items-center gap-1 text-lg font-semibold">{org.name}{org.verified && <BadgeCheck className="h-4 w-4 text-primary" />}</h2>

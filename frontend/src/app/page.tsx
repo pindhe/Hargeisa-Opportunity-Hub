@@ -33,43 +33,93 @@ export default function HomePage() {
       {data?.announcement && (
         <div className="bg-amber-100 px-4 py-2 text-center text-sm text-amber-950">{data.announcement}</div>
       )}
-      <section className="relative overflow-hidden bg-ink text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(12,107,88,0.55),transparent_36%),radial-gradient(circle_at_bottom_left,rgba(217,119,6,0.22),transparent_32%)]" />
-        <div className="relative mx-auto max-w-6xl px-4 py-20 md:py-28">
-          <motion.p initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="text-sm font-medium tracking-[0.18em] text-emerald-200/90 uppercase">
+      <section className="relative isolate flex min-h-[92vh] items-center overflow-hidden bg-ink text-white">
+        <motion.div
+          className="absolute inset-0"
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.4, ease: "easeOut" }}
+        >
+          <img
+            src="/bghero-straight.jpg"
+            alt=""
+            className="h-full w-full object-cover object-center"
+          />
+        </motion.div>
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(7,21,16,0.78)_0%,rgba(7,21,16,0.42)_46%,rgba(7,21,16,0.78)_100%)]" />
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -left-16 top-24 h-56 w-56 rounded-full bg-emerald-300/20 blur-3xl"
+          animate={{ y: [0, 18, 0], opacity: [0.35, 0.6, 0.35] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute -right-10 bottom-16 h-64 w-64 rounded-full bg-amber-200/20 blur-3xl"
+          animate={{ y: [0, -22, 0], opacity: [0.25, 0.5, 0.25] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <div className="relative mx-auto flex w-full max-w-3xl flex-col items-center px-4 py-24 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-sm font-medium tracking-[0.18em] text-emerald-100 uppercase"
+          >
             Hargeisa Opportunity Hub
           </motion.p>
-          <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mt-4 max-w-3xl font-display text-5xl leading-[1.05] tracking-tight md:text-6xl">
+          <motion.h1
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12 }}
+            className="mt-4 font-display text-5xl leading-[1.05] tracking-tight md:text-6xl"
+          >
             Find Your Next Opportunity in Hargeisa
           </motion.h1>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-white/75">
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.24 }}
+            className="mt-5 max-w-2xl text-lg leading-8 text-white/80"
+          >
             Scholarships, jobs, internships, courses, hackathons and more — all in one place.
-          </p>
-          <form onSubmit={onSearch} className="mt-8 flex max-w-2xl flex-col gap-2 rounded-2xl border border-white/15 bg-white/10 p-2 backdrop-blur-md sm:flex-row">
+          </motion.p>
+          <motion.form
+            onSubmit={onSearch}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.36 }}
+            className="mt-8 flex w-full max-w-2xl flex-col gap-2 rounded-2xl border border-white/20 bg-white/10 p-2 shadow-2xl backdrop-blur-md sm:flex-row"
+          >
             <div className="flex flex-1 items-center gap-2 px-3">
-              <Search className="h-4 w-4 text-white/70" />
+              <Search className="h-4 w-4 shrink-0 text-white/70" />
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search opportunity, organization, or keyword"
-                className="h-11 w-full bg-transparent text-sm text-white outline-none placeholder:text-white/55"
+                className="h-11 w-full bg-transparent text-center text-sm text-white outline-none placeholder:text-white/55 sm:text-left"
                 aria-label="Search opportunities"
               />
             </div>
             <Button type="submit" className="bg-white text-ink hover:bg-emerald-50">
               Search
             </Button>
-          </form>
-          <div className="mt-6 flex flex-wrap gap-3">
+          </motion.form>
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.48 }}
+            className="mt-6 flex flex-wrap items-center justify-center gap-3"
+          >
             <Button asChild size="lg">
               <Link href="/opportunities">
                 Explore Opportunities <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/20 bg-transparent text-white hover:bg-white/10">
+            <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/10 text-white hover:bg-white/20">
               <Link href="/register">Create Profile</Link>
             </Button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -80,7 +130,7 @@ export default function HomePage() {
           [data?.stats.students ?? "—", "Students"],
           [data?.stats.platforms ?? 1, "Platform"],
         ].map(([value, label]) => (
-          <div key={String(label)} className="rounded-3xl border border-border bg-white px-5 py-4">
+          <div key={String(label)} className="rounded-3xl border border-border bg-card px-5 py-4">
             <p className="font-display text-3xl">{value}</p>
             <p className="text-sm text-muted-foreground">{label}</p>
           </div>
@@ -101,7 +151,7 @@ export default function HomePage() {
         <h2 className="font-display text-3xl">Popular categories</h2>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {(data?.categories ?? []).map((category) => (
-            <Link key={category.id} href={`/opportunities?category=${category.slug}`} className="rounded-3xl border border-border bg-white p-4 hover:border-primary/40">
+            <Link key={category.id} href={`/opportunities?category=${category.slug}`} className="rounded-3xl border border-border bg-card p-4 hover:border-primary/40">
               <span className="grid h-10 w-10 place-items-center rounded-2xl" style={{ background: `${category.color}18`, color: category.color }}>
                 <CategoryIcon name={category.icon} className="h-5 w-5" />
               </span>
@@ -116,7 +166,7 @@ export default function HomePage() {
         <h2 className="font-display text-3xl">Trusted organizations</h2>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {(data?.organizations ?? []).slice(0, 10).map((org) => (
-            <Link key={org.id} href={`/organizations/${org.slug}`} className="rounded-3xl border border-border bg-white p-4">
+            <Link key={org.id} href={`/organizations/${org.slug}`} className="rounded-3xl border border-border bg-card p-4">
               <OrgMark name={org.name} />
               <p className="mt-3 flex items-center gap-1 font-semibold">
                 {org.name}
@@ -136,7 +186,7 @@ export default function HomePage() {
             ["02", "Get a personal feed", "HOH ranks approved listings against your profile and explains the match."],
             ["03", "Track and apply", "Save roles, follow deadlines, and move applications across your board."],
           ].map(([step, title, copy]) => (
-            <div key={step} className="rounded-3xl bg-white p-5 border border-border">
+            <div key={step} className="rounded-3xl bg-card p-5 border border-border">
               <p className="font-display text-sm text-primary">{step}</p>
               <h3 className="mt-2 text-lg font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy}</p>
@@ -173,7 +223,7 @@ function Section({ title, href, action, children }: { title: string; href: strin
 }
 
 function OpportunityGrid({ items, loading }: { items: HomePayload["latest"]; loading: boolean }) {
-  if (loading) return <div className="h-40 animate-pulse rounded-3xl bg-white" />;
+  if (loading) return <div className="h-40 animate-pulse rounded-3xl bg-card" />;
   if (items.length === 0) return <p className="text-sm text-muted-foreground">Nothing to show yet.</p>;
   return (
     <div className="grid gap-4 md:grid-cols-2">

@@ -47,14 +47,14 @@ function SearchScreen() {
               <h2 className="font-semibold">Organizations</h2>
               <div className="mt-2 flex flex-wrap gap-2">
                 {result.data.organizations.map((org) => (
-                  <Link key={org.id} href={`/organizations/${org.slug}`} className="rounded-full border border-border bg-white px-3 py-1 text-sm">{org.name}</Link>
+                  <Link key={org.id} href={`/organizations/${org.slug}`} className="rounded-full border border-border bg-card px-3 py-1 text-sm">{org.name}</Link>
                 ))}
               </div>
             </div>
           )}
         </div>
         <aside className="space-y-4">
-          <div className="rounded-3xl border border-border bg-white p-4">
+          <div className="rounded-3xl border border-border bg-card p-4">
             <p className="font-semibold">Related categories</p>
             <div className="mt-2 flex flex-col gap-1 text-sm">
               {(result.data?.related_categories ?? []).map((item) => (
@@ -62,7 +62,7 @@ function SearchScreen() {
               ))}
             </div>
           </div>
-          <div className="rounded-3xl border border-border bg-white p-4">
+          <div className="rounded-3xl border border-border bg-card p-4">
             <p className="font-semibold">Suggested searches</p>
             <div className="mt-2 flex flex-col gap-1 text-sm">
               {(result.data?.suggestions ?? []).map((item) => (

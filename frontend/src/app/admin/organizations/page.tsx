@@ -33,7 +33,7 @@ export default function AdminOrganizationsPage() {
   return (
     <div>
       <h1 className="font-display text-4xl">Organizations</h1>
-      <form className="mt-4 grid gap-3 rounded-3xl border border-border bg-white p-4 md:grid-cols-2" onSubmit={(event) => { event.preventDefault(); setError(""); save.mutate(); }}>
+      <form className="mt-4 grid gap-3 rounded-3xl border border-border bg-card p-4 md:grid-cols-2" onSubmit={(event) => { event.preventDefault(); setError(""); save.mutate(); }}>
         {(["name", "website", "email", "phone", "location"] as const).map((field) => (
           <div key={field}><Label>{field}</Label><Input value={form[field]} onChange={(event) => setForm({ ...form, [field]: event.target.value })} /></div>
         ))}
@@ -44,7 +44,7 @@ export default function AdminOrganizationsPage() {
       </form>
       <div className="mt-4 space-y-2">
         {(orgs.data ?? []).map((org) => (
-          <div key={org.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border bg-white px-4 py-3">
+          <div key={org.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border bg-card px-4 py-3">
             <div><p className="font-medium">{org.name}</p><p className="text-sm text-muted-foreground">{org.location} · {org.opportunity_count} opportunities</p></div>
             <div className="flex gap-2">
               <Button size="sm" variant="outline" onClick={() => { setEditing(org.id); setForm({ name: org.name, description: org.description, website: org.website ?? "", email: org.email ?? "", phone: org.phone ?? "", location: org.location ?? "", verified: org.verified }); }}>Edit</Button>

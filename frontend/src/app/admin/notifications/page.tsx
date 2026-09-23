@@ -26,7 +26,7 @@ export default function AdminNotificationsPage() {
     <div>
       <h1 className="font-display text-4xl">Send a notification</h1>
       <form
-        className="mt-4 max-w-xl space-y-3 rounded-3xl border border-border bg-white p-5"
+        className="mt-4 max-w-xl space-y-3 rounded-3xl border border-border bg-card p-5"
         onSubmit={form.handleSubmit(async (values) => {
           try {
             const response = await api.post<{ message: string }>("/api/admin/notifications", { ...values, user_email: values.user_email || null });

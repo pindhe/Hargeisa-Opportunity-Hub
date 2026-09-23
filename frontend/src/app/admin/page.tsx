@@ -47,7 +47,7 @@ export default function AdminHome() {
           ["Applications", totals?.applications],
           ["Organizations", totals?.organizations],
         ].map(([label, value]) => (
-          <div key={String(label)} className="rounded-3xl border border-border bg-white p-4">
+          <div key={String(label)} className="rounded-3xl border border-border bg-card p-4">
             <p className="text-3xl font-semibold">{value ?? "—"}</p>
             <p className="text-sm text-muted-foreground">{label}</p>
           </div>
@@ -62,5 +62,5 @@ export default function AdminHome() {
 }
 
 function Panel({ title, children }: { title: string; children: React.ReactNode }) {
-  return <section className="rounded-3xl border border-border bg-white p-5"><h2 className="mb-4 font-semibold">{title}</h2>{children}</section>;
+  return <section className="rounded-3xl border border-border bg-card p-5"><h2 className="mb-4 font-semibold">{title}</h2>{children}</section>;
 }

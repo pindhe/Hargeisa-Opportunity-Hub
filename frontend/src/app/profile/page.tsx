@@ -60,7 +60,7 @@ function Profile() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
-      <div className="flex items-center gap-4 rounded-[2rem] border border-border bg-white p-6">
+      <div className="flex items-center gap-4 rounded-[2rem] border border-border bg-card p-6">
         {user.profile_image ? (
           <img src={mediaUrl(user.profile_image)} alt="" className="h-20 w-20 rounded-3xl object-cover" />
         ) : (
@@ -82,14 +82,14 @@ function Profile() {
         <ChipBlock title="Skills" items={user.skills} />
         <ChipBlock title="Interests" items={user.interests} />
       </div>
-      <div className="mt-4 rounded-3xl border border-border bg-white p-5 text-sm leading-6 text-muted-foreground">
+      <div className="mt-4 rounded-3xl border border-border bg-card p-5 text-sm leading-6 text-muted-foreground">
         <p className="font-semibold text-foreground">Education</p>
         <p className="mt-2">{[user.education_level, user.faculty, user.department, user.graduation_year].filter(Boolean).join(" · ") || "Not added yet."}</p>
         {user.bio && <p className="mt-3">{user.bio}</p>}
       </div>
       {editing && (
         <form
-          className="mt-4 grid gap-3 rounded-3xl border border-border bg-white p-5 sm:grid-cols-2"
+          className="mt-4 grid gap-3 rounded-3xl border border-border bg-card p-5 sm:grid-cols-2"
           onSubmit={form.handleSubmit(async (values) => {
             try {
               const response = await api.patch("/api/profile", {
@@ -153,12 +153,12 @@ function Profile() {
 }
 
 function Stat({ label, value }: { label: string; value: number }) {
-  return <div className="rounded-3xl border border-border bg-white p-4"><p className="text-2xl font-semibold">{value}</p><p className="text-sm text-muted-foreground">{label}</p></div>;
+  return <div className="rounded-3xl border border-border bg-card p-4"><p className="text-2xl font-semibold">{value}</p><p className="text-sm text-muted-foreground">{label}</p></div>;
 }
 
 function ChipBlock({ title, items }: { title: string; items: string[] }) {
   return (
-    <div className="rounded-3xl border border-border bg-white p-5">
+    <div className="rounded-3xl border border-border bg-card p-5">
       <p className="font-semibold">{title}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {items.length === 0 && <p className="text-sm text-muted-foreground">None yet.</p>}

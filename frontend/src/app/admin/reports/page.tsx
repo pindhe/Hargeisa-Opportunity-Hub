@@ -15,7 +15,7 @@ export default function AdminReportsPage() {
       <h1 className="font-display text-4xl">Reports</h1>
       <div className="mt-4 space-y-3">
         {(reports.data ?? []).map((report) => (
-          <article key={report.id} className="rounded-3xl border border-border bg-white p-4">
+          <article key={report.id} className="rounded-3xl border border-border bg-card p-4">
             <p className="font-semibold">{report.opportunity_title}</p>
             <p className="text-sm text-muted-foreground">{report.user_name} · {report.reason} · {report.status}</p>
             <p className="mt-2 text-sm">{report.description || "No extra detail."}</p>

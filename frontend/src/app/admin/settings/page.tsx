@@ -20,7 +20,7 @@ export default function SettingsPage() {
     <div>
       <h1 className="font-display text-4xl">Settings</h1>
       <form
-        className="mt-4 max-w-xl space-y-3 rounded-3xl border border-border bg-white p-5"
+        className="mt-4 max-w-xl space-y-3 rounded-3xl border border-border bg-card p-5"
         onSubmit={async (event) => {
           event.preventDefault();
           await api.put("/api/admin/settings", form);

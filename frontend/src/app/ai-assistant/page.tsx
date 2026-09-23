@@ -61,7 +61,7 @@ export default function AssistantPage() {
 
   return (
     <div className="mx-auto grid min-h-[calc(100vh-4rem)] max-w-6xl gap-4 px-4 py-6 lg:grid-cols-[260px_1fr]">
-      <aside className="rounded-3xl border border-border bg-white p-3">
+      <aside className="rounded-3xl border border-border bg-card p-3">
         <div className="flex items-center justify-between px-2">
           <p className="font-semibold">History</p>
           <button type="button" className="text-xs text-primary" onClick={() => { setConversationId(null); setMessages([]); }}>New</button>
@@ -75,7 +75,7 @@ export default function AssistantPage() {
           {!user && <p className="px-2 py-3 text-xs text-muted-foreground">Sign in to keep conversation history.</p>}
         </div>
       </aside>
-      <section className="flex min-h-[70vh] flex-col rounded-[2rem] border border-border bg-white">
+      <section className="flex min-h-[70vh] flex-col rounded-[2rem] border border-border bg-card">
         <header className="border-b border-border px-5 py-4">
           <h1 className="font-display text-2xl">HOH AI Assistant</h1>
           <p className="text-sm text-muted-foreground">Ask about approved opportunities, deadlines, and what fits your profile.</p>

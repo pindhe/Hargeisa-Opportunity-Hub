@@ -16,7 +16,7 @@ export function OrganizationView({ slug }: { slug: string }) {
   if (!org) return <p className="px-4 py-16 text-sm text-muted-foreground">Loading organization…</p>;
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <div className="flex items-start gap-4 rounded-[2rem] border border-border bg-white p-6">
+      <div className="flex items-start gap-4 rounded-[2rem] border border-border bg-card p-6">
         <OrgMark name={org.name} className="h-16 w-16" />
         <div>
           <h1 className="flex items-center gap-2 font-display text-4xl">{org.name}{org.verified && <BadgeCheck className="h-6 w-6 text-primary" />}</h1>

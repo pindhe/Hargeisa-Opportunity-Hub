@@ -33,7 +33,7 @@ function Board() {
         {APPLICATION_STATUSES.map((status) => (
           <section
             key={status}
-            className="w-72 shrink-0 rounded-3xl bg-white/80 p-3"
+            className="w-72 shrink-0 rounded-3xl bg-card/80 p-3"
             onDragOver={(event) => event.preventDefault()}
             onDrop={(event) => {
               const id = event.dataTransfer.getData("text/plain");
@@ -43,7 +43,7 @@ function Board() {
             <h2 className="px-1 text-sm font-semibold">{statusLabel(status)}</h2>
             <div className="mt-3 space-y-3">
               {(applications.data ?? []).filter((item) => item.status === status).map((item) => (
-                <article key={item.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} className="cursor-grab rounded-2xl border border-border bg-white p-3">
+                <article key={item.id} draggable onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)} className="cursor-grab rounded-2xl border border-border bg-card p-3">
                   <Link href={`/opportunities/${item.opportunity.slug}`} className="font-medium hover:text-primary">{item.opportunity.title}</Link>
                   <p className="mt-1 text-xs text-muted-foreground">{item.opportunity.organization.name}</p>
                   <div className="mt-2"><DeadlineBadge days={item.opportunity.days_remaining} /></div>

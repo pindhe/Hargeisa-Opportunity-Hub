@@ -41,7 +41,7 @@ export default function AdminOpportunitiesPage() {
           {["DRAFT", "PENDING", "APPROVED", "REJECTED", "EXPIRED"].map((item) => <option key={item}>{item}</option>)}
         </Select>
       </div>
-      <div className="mt-4 overflow-x-auto rounded-3xl border border-border bg-white">
+      <div className="mt-4 overflow-x-auto rounded-3xl border border-border bg-card">
         <table className="w-full min-w-[860px] text-left text-sm">
           <thead className="text-muted-foreground">
             <tr>{["Title", "Organization", "Category", "Deadline", "Status", "Views", "Created", "Actions"].map((heading) => <th key={heading} className="px-3 py-3 font-medium">{heading}</th>)}</tr>

@@ -15,7 +15,7 @@ export default function AdminUsersPage() {
   return (
     <div>
       <h1 className="font-display text-4xl">Users</h1>
-      <div className="mt-4 overflow-x-auto rounded-3xl border border-border bg-white">
+      <div className="mt-4 overflow-x-auto rounded-3xl border border-border bg-card">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead><tr>{["Name", "Email", "Role", "Verified", ""].map((heading) => <th key={heading} className="px-3 py-3 font-medium text-muted-foreground">{heading}</th>)}</tr></thead>
           <tbody>

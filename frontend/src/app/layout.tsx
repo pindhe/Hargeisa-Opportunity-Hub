@@ -15,8 +15,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} ${display.variable} h-full antialiased`}>
+    <html lang="en" className={`${geist.variable} ${display.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full bg-background text-foreground">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("hoh-theme");var d=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");document.documentElement.style.colorScheme=d?"dark":"light";}catch(e){}})();`,
+          }}
+        />
         <Providers>
           <Shell>{children}</Shell>
         </Providers>

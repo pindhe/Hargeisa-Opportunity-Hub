@@ -65,7 +65,7 @@ export function OpportunityForm({
 
   return (
     <form
-      className="grid gap-4 rounded-3xl border border-border bg-white p-5 md:grid-cols-2"
+      className="grid gap-4 rounded-3xl border border-border bg-card p-5 md:grid-cols-2"
       onSubmit={form.handleSubmit(async (values) => {
         setError("");
         const payload = {

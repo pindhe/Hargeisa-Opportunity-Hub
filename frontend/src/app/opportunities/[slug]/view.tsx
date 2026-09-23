@@ -65,7 +65,7 @@ export function OpportunityView({ slug }: { slug: string }) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <article className="rounded-[2rem] border border-border bg-white p-6 md:p-8">
+        <article className="rounded-[2rem] border border-border bg-card p-6 md:p-8">
           <div className="flex items-start gap-4">
             <OrgMark name={opp.organization.name} className="h-14 w-14 text-sm" />
             <div>
@@ -113,7 +113,7 @@ export function OpportunityView({ slug }: { slug: string }) {
             Report this listing
           </button>
         </article>
-        <aside className="h-fit space-y-3 rounded-[2rem] border border-border bg-white p-5 lg:sticky lg:top-24">
+        <aside className="h-fit space-y-3 rounded-[2rem] border border-border bg-card p-5 lg:sticky lg:top-24">
           <DeadlineBadge days={opp.days_remaining} />
           <p className="text-sm text-muted-foreground">Deadline {formatDate(opp.deadline)}</p>
           <Button className="w-full" onClick={() => opp.application_url && window.open(opp.application_url, "_blank", "noopener,noreferrer")}>

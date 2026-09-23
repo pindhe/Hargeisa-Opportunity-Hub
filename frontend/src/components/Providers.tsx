@@ -4,6 +4,7 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AuthProvider } from "@/lib/auth";
+import { ThemeProvider } from "@/lib/theme";
 
 type ToastContextValue = { push: (message: string) => void };
 
@@ -30,6 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={client}>
+      <ThemeProvider>
       <AuthProvider>
         <ToastContext.Provider value={toastValue}>
           {children}
@@ -42,6 +44,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           </div>
         </ToastContext.Provider>
       </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

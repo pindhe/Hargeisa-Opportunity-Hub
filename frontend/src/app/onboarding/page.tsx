@@ -62,7 +62,7 @@ function Wizard() {
       <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-muted">
         <div className="h-full bg-primary" style={{ width: `${((step + 1) / 5) * 100}%` }} />
       </div>
-      <div className="mt-6 rounded-[2rem] border border-border bg-white p-6">
+      <div className="mt-6 rounded-[2rem] border border-border bg-card p-6">
         {step === 0 && (
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="University"><Input value={form.university} onChange={(event) => setForm({ ...form, university: event.target.value })} /></Field>
@@ -120,7 +120,7 @@ function Chips({
             key={option}
             type="button"
             onClick={() => onToggle(option)}
-            className={cn("rounded-full border px-3 py-2 text-sm", active ? "border-primary bg-accent text-primary" : "border-border bg-white")}
+            className={cn("rounded-full border px-3 py-2 text-sm", active ? "border-primary bg-accent text-primary" : "border-border bg-card")}
           >
             {label ? label(option) : option}
           </button>

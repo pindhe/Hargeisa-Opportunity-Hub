@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Bell, Menu, Search, X } from "lucide-react";
 import { useState } from "react";
 
@@ -49,10 +50,10 @@ function Navbar() {
   });
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#071510]/90 text-white backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border bg-card/90 text-foreground backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4">
         <Link href="/" className="flex items-center gap-2 font-display text-lg tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-sm font-bold">H</span>
+          <span className="grid h-8 w-8 place-items-center rounded-xl bg-primary text-sm font-bold text-primary-foreground">H</span>
           HOH
         </Link>
         <nav className="ml-4 hidden items-center gap-1 md:flex">
@@ -61,8 +62,8 @@ function Navbar() {
               key={link.href}
               href={link.href}
               className={cn(
-                "rounded-full px-3 py-1.5 text-sm text-white/75 hover:bg-white/10 hover:text-white",
-                pathname.startsWith(link.href) && "bg-white/10 text-white",
+                "rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground",
+                pathname.startsWith(link.href) && "bg-muted text-foreground",
               )}
             >
               {link.label}
@@ -70,14 +71,15 @@ function Navbar() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Link href="/search" className="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10" aria-label="Search">
+          <Link href="/search" className="grid h-10 w-10 place-items-center rounded-full hover:bg-muted" aria-label="Search">
             <Search className="h-4 w-4" />
           </Link>
+          <ThemeToggle />
           {user && (
             <div className="relative">
               <button
                 type="button"
-                className="relative grid h-10 w-10 place-items-center rounded-full hover:bg-white/10"
+                className="relative grid h-10 w-10 place-items-center rounded-full hover:bg-muted"
                 aria-label="Notifications"
                 onClick={() => setBell((value) => !value)}
               >
@@ -89,7 +91,7 @@ function Navbar() {
                 )}
               </button>
               {bell && (
-                <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-border bg-white p-2 text-foreground shadow-2xl">
+                <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-border bg-card p-2 text-foreground shadow-2xl">
                   <div className="flex items-center justify-between px-2 py-1">
                     <p className="text-sm font-semibold">Notifications</p>
                     <Link href="/notifications" className="text-xs text-primary" onClick={() => setBell(false)}>
@@ -124,13 +126,13 @@ function Navbar() {
               <Button asChild size="sm" variant="secondary" className="hidden sm:inline-flex">
                 <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"}>{user.role === "ADMIN" ? "Admin" : "Dashboard"}</Link>
               </Button>
-              <button type="button" className="hidden text-sm text-white/80 hover:text-white sm:inline" onClick={logout}>
+              <button type="button" className="hidden text-sm text-muted-foreground hover:text-foreground sm:inline" onClick={logout}>
                 Log out
               </button>
             </>
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
-              <Link href="/login" className="text-sm text-white/80 hover:text-white">
+              <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground">
                 Log in
               </Link>
               <Button asChild size="sm">
@@ -138,24 +140,24 @@ function Navbar() {
               </Button>
             </div>
           )}
-          <button type="button" className="grid h-10 w-10 place-items-center rounded-full hover:bg-white/10 md:hidden" onClick={() => setOpen((value) => !value)} aria-label="Menu">
+          <button type="button" className="grid h-10 w-10 place-items-center rounded-full hover:bg-muted md:hidden" onClick={() => setOpen((value) => !value)} aria-label="Menu">
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
         </div>
       </div>
       {open && (
-        <div className="space-y-1 border-t border-white/10 px-4 py-3 md:hidden">
+        <div className="space-y-1 border-t border-border px-4 py-3 md:hidden">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="block rounded-xl px-3 py-2 text-sm hover:bg-white/10" onClick={() => setOpen(false)}>
+            <Link key={link.href} href={link.href} className="block rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
               {link.label}
             </Link>
           ))}
           {user ? (
-            <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="block rounded-xl px-3 py-2 text-sm hover:bg-white/10" onClick={() => setOpen(false)}>
+            <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="block rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
               {user.role === "ADMIN" ? "Admin" : "Dashboard"}
             </Link>
           ) : (
-            <Link href="/login" className="block rounded-xl px-3 py-2 text-sm hover:bg-white/10" onClick={() => setOpen(false)}>
+            <Link href="/login" className="block rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
               Log in
             </Link>
           )}
@@ -167,7 +169,7 @@ function Navbar() {
 
 function Footer() {
   return (
-    <footer className="mt-16 border-t border-border bg-white">
+    <footer className="mt-16 border-t border-border bg-card">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <p className="font-display text-xl">HOH</p>

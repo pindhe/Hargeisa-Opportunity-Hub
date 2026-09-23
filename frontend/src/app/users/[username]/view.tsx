@@ -16,7 +16,7 @@ export function PublicProfile({ username }: { username: string }) {
   if (!user) return <p className="px-4 py-16">This profile is not available.</p>;
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <div className="rounded-[2rem] border border-border bg-white p-6">
+      <div className="rounded-[2rem] border border-border bg-card p-6">
         <div className="flex items-center gap-4">
           {user.profile_image ? <img src={mediaUrl(user.profile_image)} alt="" className="h-16 w-16 rounded-2xl object-cover" /> : <div className="grid h-16 w-16 place-items-center rounded-2xl bg-ink text-white">{initials(user.full_name)}</div>}
           <div>

@@ -21,7 +21,7 @@ function Center() {
       </div>
       <div className="mt-6 space-y-2">
         {(notes.data ?? []).map((item) => (
-          <Link key={item.id} href={item.link || "/notifications"} onClick={() => void api.post(`/api/notifications/${item.id}/read`)} className={cn("block rounded-3xl border border-border bg-white p-4", !item.is_read && "border-primary/30 bg-accent/40")}>
+          <Link key={item.id} href={item.link || "/notifications"} onClick={() => void api.post(`/api/notifications/${item.id}/read`)} className={cn("block rounded-3xl border border-border bg-card p-4", !item.is_read && "border-primary/30 bg-accent/40")}>
             <div className="flex items-center justify-between gap-3">
               <p className="font-semibold">{item.title}</p>
               <span className="text-xs text-muted-foreground">{formatDate(item.created_at)}</span>

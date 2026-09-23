@@ -42,7 +42,7 @@ export function OpportunityCard({
   return (
     <article
       className={cn(
-        "group flex h-full flex-col rounded-3xl border border-border bg-white p-4 shadow-[0_16px_40px_-32px_rgba(16,35,28,0.7)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-28px_rgba(12,107,88,0.45)]",
+        "group flex h-full flex-col rounded-3xl border border-border bg-card p-4 shadow-[0_16px_40px_-32px_rgba(16,35,28,0.7)] transition hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-28px_rgba(12,107,88,0.45)]",
         layout === "list" && "sm:flex-row sm:items-center sm:gap-5",
       )}
     >
@@ -79,7 +79,7 @@ export function OpportunityCard({
         </div>
       )}
       {opportunity.recommendation_reason && (
-        <p className="mt-3 text-xs leading-5 text-[#0a5748]">{opportunity.recommendation_reason}</p>
+        <p className="mt-3 text-xs leading-5 text-primary">{opportunity.recommendation_reason}</p>
       )}
       <div className={cn("mt-4 flex items-center justify-between gap-3", layout === "list" && "sm:mt-0 sm:w-auto")}>
         <p className="text-xs text-muted-foreground">{formatDate(opportunity.deadline)}</p>

@@ -41,7 +41,7 @@ export function ExplorePage() {
   return (
     <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[260px_1fr]">
       <aside className={`${filtersOpen ? "block" : "hidden"} lg:block`}>
-        <div className="space-y-4 rounded-3xl border border-border bg-white p-4">
+        <div className="space-y-4 rounded-3xl border border-border bg-card p-4">
           <p className="font-semibold">Filters</p>
           <Filter label="Category">
             <Select value={params.get("category") ?? ""} onChange={(event) => update({ category: event.target.value })}>
@@ -142,7 +142,7 @@ export function ExplorePage() {
             <OpportunityCard key={item.id} opportunity={item} layout={layout} />
           ))}
         </div>
-        {result.data?.items.length === 0 && <p className="mt-8 rounded-3xl bg-white p-8 text-sm text-muted-foreground">No opportunities match these filters.</p>}
+        {result.data?.items.length === 0 && <p className="mt-8 rounded-3xl bg-card p-8 text-sm text-muted-foreground">No opportunities match these filters.</p>}
         <div className="mt-6 flex items-center justify-between">
           <Button type="button" variant="outline" disabled={page <= 1} onClick={() => update({ page: String(page - 1) }, false)}>Previous</Button>
           <span className="text-sm text-muted-foreground">Page {page} of {totalPages}</span>
