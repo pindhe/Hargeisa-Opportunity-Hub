@@ -28,7 +28,7 @@ function Saved() {
       <div className="mt-6 space-y-3">
         {(saved.data ?? []).map((item) => (
           <article key={item.id} className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-4 sm:flex-row sm:items-center">
-            <OrgMark name={item.organization.name} />
+            <OrgMark name={item.organization.name} logo={item.organization.logo} className="h-14 w-24" />
             <div className="min-w-0 flex-1">
               <Link href={`/opportunities/${item.slug}`} className="font-semibold hover:text-primary">{item.title}</Link>
               <p className="text-sm text-muted-foreground">{item.organization.name}</p>

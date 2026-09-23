@@ -9,7 +9,7 @@ export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000
 
 export function mediaUrl(path: string | null | undefined) {
   if (!path) return "";
-  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("/orgs/")) return path;
   return `${API_URL}${path}`;
 }
 

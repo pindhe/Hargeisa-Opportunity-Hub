@@ -59,6 +59,17 @@ def seed_if_empty(db: Session) -> None:
         ("Ministry of Education", "ministry-of-education", "Public education programs, teaching pathways, and national events.", "https://moe.govsomaliland.org", "info@moe.govsomaliland.org", None, "Hargeisa", True),
         ("UNDP Somalia", "undp-somalia", "Development programs that include youth innovation and graduate fellowships.", "https://www.undp.org", "registry.so@undp.org", None, "Hargeisa", True),
     ]
+    logos = {
+        "university-of-hargeisa": "/orgs/university-of-hargeisa.png",
+        "gollis-university": "/orgs/gollis-university.svg",
+        "amoud-university": "/orgs/amoud-university.svg",
+        "telesom": "/orgs/telesom.png",
+        "dahabshiil": "/orgs/dahabshiil.png",
+        "shaqodoon": "/orgs/shaqodoon.png",
+        "spark": "/orgs/spark.svg",
+        "ministry-of-education": "/orgs/ministry-of-education.svg",
+        "undp-somalia": "/orgs/undp-somalia.svg",
+    }
     org_map: dict[str, Organization] = {}
     for name, slug, description, website, email, phone, location, verified in organizations:
         row = Organization(
@@ -70,6 +81,7 @@ def seed_if_empty(db: Session) -> None:
             phone=phone,
             location=location,
             verified=verified,
+            logo=logos.get(slug),
         )
         db.add(row)
         org_map[slug] = row

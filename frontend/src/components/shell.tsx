@@ -4,9 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Logo } from "@/components/logo";
+import { SearchOverlay } from "@/components/search-overlay";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Bell, Building2, Compass, LayoutDashboard, LayoutGrid, LogIn, LogOut, Menu, Search, Shield, Sparkles, UserPlus, X } from "lucide-react";
-import { useState } from "react";
+import { Bell, BookOpen, Briefcase, Compass, GraduationCap, Info, Laptop, Layers, LayoutDashboard, LogIn, LogOut, MapPin, Menu, Search, Shield, Sparkles, UserPlus, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -16,24 +17,48 @@ import { cn } from "@/lib/utils";
 
 const links = [
   { href: "/opportunities", label: "Explore", icon: Compass },
-  { href: "/categories", label: "Categories", icon: LayoutGrid },
-  { href: "/organizations", label: "Organizations", icon: Building2 },
-  { href: "/ai-assistant", label: "AI Assistant", icon: Sparkles },
+  { href: "/programs", label: "Programs", icon: Layers },
+  { href: "/about", label: "About", icon: Info },
 ];
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
+
+  useEffect(() => {
+    function openSearch(event: Event) {
+      const detail = (event as CustomEvent<string>).detail ?? "";
+      setSearchQuery(detail);
+      setSearchOpen(true);
+    }
+    window.addEventListener("hoh-open-search", openSearch);
+    return () => window.removeEventListener("hoh-open-search", openSearch);
+  }, []);
+
   if (pathname.startsWith("/admin")) return <>{children}</>;
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
+      <Navbar onSearch={() => { setSearchQuery(""); setSearchOpen(true); }} />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer onSearch={() => { setSearchQuery(""); setSearchOpen(true); }} />
+      {!pathname.startsWith("/ai-assistant") && (
+        <Link
+          href="/ai-assistant"
+          aria-label="AI Assistant"
+          className="fixed right-5 bottom-5 z-50 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_30px_-12px_rgba(12,107,88,0.8)]"
+        >
+          <Sparkles className="h-5 w-5" />
+        </Link>
+      )}
+      <SearchOverlay open={searchOpen} initialQuery={searchQuery} onClose={closeSearch} />
     </div>
   );
 }
 
-function Navbar() {
+function Navbar({ onSearch }: { onSearch: () => void }) {
   const pathname = usePathname();
   const { user, ready, logout } = useAuth();
   const [open, setOpen] = useState(false);
@@ -72,9 +97,9 @@ function Navbar() {
           ))}
         </nav>
         <div className="ml-auto flex items-center gap-2">
-          <Link href="/search" className="grid h-10 w-10 place-items-center rounded-full hover:bg-muted" aria-label="Search">
+          <button type="button" onClick={onSearch} className="grid h-10 w-10 place-items-center rounded-full hover:bg-muted" aria-label="Search">
             <Search className="h-4 w-4" />
-          </Link>
+          </button>
           <ThemeToggle />
           {user && (
             <div className="relative">
@@ -136,17 +161,13 @@ function Navbar() {
               </button>
             </>
           ) : (
-            <div className="hidden items-center gap-2 sm:flex">
-              <Link href="/login" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+            <div className="flex items-center gap-1">
+              <Link href="/login" aria-label="Log in" className="grid h-10 w-10 place-items-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground">
                 <LogIn className="h-4 w-4" />
-                Log in
               </Link>
-              <Button asChild size="sm">
-                <Link href="/register">
-                  <UserPlus className="h-4 w-4" />
-                  Create profile
-                </Link>
-              </Button>
+              <Link href="/register" aria-label="Create profile" className="grid h-10 w-10 place-items-center rounded-full bg-primary text-primary-foreground hover:brightness-95">
+                <UserPlus className="h-4 w-4" />
+              </Link>
             </div>
           )}
           <button type="button" className="grid h-10 w-10 place-items-center rounded-full hover:bg-muted md:hidden" onClick={() => setOpen((value) => !value)} aria-label="Menu">
@@ -162,15 +183,10 @@ function Navbar() {
               {link.label}
             </Link>
           ))}
-          {user ? (
+          {user && (
             <Link href={user.role === "ADMIN" ? "/admin" : "/dashboard"} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
               {user.role === "ADMIN" ? <Shield className="h-4 w-4 text-primary" /> : <LayoutDashboard className="h-4 w-4 text-primary" />}
               {user.role === "ADMIN" ? "Admin" : "Dashboard"}
-            </Link>
-          ) : (
-            <Link href="/login" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm hover:bg-muted" onClick={() => setOpen(false)}>
-              <LogIn className="h-4 w-4 text-primary" />
-              Log in
             </Link>
           )}
         </div>
@@ -179,34 +195,89 @@ function Navbar() {
   );
 }
 
-function Footer() {
+function Footer({ onSearch }: { onSearch: () => void }) {
   return (
     <footer className="mt-16 border-t border-border bg-card">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-4">
-        <div className="md:col-span-2">
-          <Logo size="md" />
-          <p className="mt-2 max-w-sm text-sm leading-6 text-muted-foreground">
-            Hargeisa Opportunity Hub brings scholarships, jobs, internships, courses, and competitions into one searchable place.
+      <div className="h-1 bg-gradient-to-r from-primary via-emerald-300 to-primary" />
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <Logo size="sm" />
+          <p className="mt-4 max-w-xs text-sm leading-6 text-muted-foreground">
+            Scholarships, jobs, internships, courses, and competitions for students and graduates in Hargeisa.
+          </p>
+          <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium">
+            <MapPin className="h-4 w-4 text-primary" />
+            Hargeisa, Somaliland
           </p>
         </div>
-        <div className="text-sm">
-          <p className="font-semibold">Discover</p>
-          <div className="mt-2 flex flex-col gap-1 text-muted-foreground">
-            <Link href="/opportunities">Opportunities</Link>
-            <Link href="/categories">Categories</Link>
-            <Link href="/organizations">Organizations</Link>
+        <div>
+          <p className="text-sm font-semibold">Discover</p>
+          <div className="mt-4 flex flex-col gap-2">
+            <Link href="/opportunities" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+              <Compass className="h-4 w-4" />
+              Explore
+            </Link>
+            <Link href="/programs" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+              <Layers className="h-4 w-4" />
+              Programs
+            </Link>
+            <Link href="/about" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+              <Info className="h-4 w-4" />
+              About
+            </Link>
+            <button type="button" onClick={onSearch} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+              <Search className="h-4 w-4" />
+              Search
+            </button>
           </div>
         </div>
-        <div className="text-sm">
-          <p className="font-semibold">Account</p>
-          <div className="mt-2 flex flex-col gap-1 text-muted-foreground">
-            <Link href="/register">Create profile</Link>
-            <Link href="/dashboard">Dashboard</Link>
-            <Link href="/ai-assistant">AI Assistant</Link>
-          </div>
+        <FooterColumn
+          title="Find"
+          items={[
+            { href: "/opportunities?type=SCHOLARSHIP", label: "Scholarships", icon: GraduationCap },
+            { href: "/opportunities?type=JOB", label: "Jobs", icon: Briefcase },
+            { href: "/opportunities?type=INTERNSHIP", label: "Internships", icon: Laptop },
+            { href: "/opportunities?type=COURSE", label: "Courses", icon: BookOpen },
+          ]}
+        />
+        <FooterColumn
+          title="Account"
+          items={[
+            { href: "/register", label: "Create profile", icon: UserPlus },
+            { href: "/login", label: "Log in", icon: LogIn },
+            { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+          ]}
+        />
+      </div>
+      <div className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-5 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Hargeisa Opportunity Hub</p>
+          <p>One place for what opens next.</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  items,
+}: {
+  title: string;
+  items: { href: string; label: string; icon: React.ComponentType<{ className?: string }> }[];
+}) {
+  return (
+    <div>
+      <p className="text-sm font-semibold">{title}</p>
+      <div className="mt-4 flex flex-col gap-2">
+        {items.map((item) => (
+          <Link key={item.href} href={item.href} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
+            <item.icon className="h-4 w-4" />
+            {item.label}
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
 

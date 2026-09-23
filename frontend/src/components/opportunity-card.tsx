@@ -10,9 +10,16 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import type { Opportunity } from "@/lib/types";
-import { cn, formatDate, initials, typeLabel } from "@/lib/utils";
+import { cn, formatDate, initials, mediaUrl, typeLabel } from "@/lib/utils";
 
-export function OrgMark({ name, className }: { name: string; className?: string }) {
+export function OrgMark({ name, logo, className }: { name: string; logo?: string | null; className?: string }) {
+  if (logo) {
+    return (
+      <span className={cn("grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white p-1", className)}>
+        <img src={mediaUrl(logo)} alt="" className="max-h-full max-w-full object-contain" />
+      </span>
+    );
+  }
   return (
     <div className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-ink text-xs font-semibold tracking-wide text-white", className)}>
       {initials(name)}
@@ -47,7 +54,7 @@ export function OpportunityCard({
       )}
     >
       <div className={cn("flex items-start gap-3", layout === "list" && "sm:w-[46%]")}>
-        <OrgMark name={opportunity.organization.name} />
+        <OrgMark name={opportunity.organization.name} logo={opportunity.organization.logo} />
         <div className="min-w-0">
           <p className="truncate text-xs font-medium text-muted-foreground">{opportunity.organization.name}</p>
           <h3 className="mt-1 font-display text-lg leading-snug tracking-tight">

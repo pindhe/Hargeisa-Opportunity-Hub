@@ -67,7 +67,7 @@ export function OpportunityView({ slug }: { slug: string }) {
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <article className="rounded-[2rem] border border-border bg-card p-6 md:p-8">
           <div className="flex items-start gap-4">
-            <OrgMark name={opp.organization.name} className="h-14 w-14 text-sm" />
+            <OrgMark name={opp.organization.name} logo={opp.organization.logo} className="h-16 w-28" />
             <div>
               <Link href={`/organizations/${opp.organization.slug}`} className="inline-flex items-center gap-1 text-sm font-medium text-primary">
                 {opp.organization.name}
