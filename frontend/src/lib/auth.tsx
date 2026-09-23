@@ -1,91 +1,77 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { api, getMe } from "./api";
-import type { User } from "./types";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { api } from "@/lib/api";
+import { setToken } from "@/lib/token";
+import type { User } from "@/lib/types";
 
 type AuthContextValue = {
   user: User | null;
-  token: string | null;
-  loading: boolean;
+  ready: boolean;
   login: (email: string, password: string) => Promise<User>;
-  register: (payload: Record<string, string>) => Promise<User>;
+  register: (payload: { full_name: string; email: string; password: string; role: string }) => Promise<User>;
   logout: () => void;
-  refresh: () => Promise<void>;
+  setUser: (user: User) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const refresh = useCallback(async () => {
-    const stored = window.localStorage.getItem("hoh-token");
-    if (!stored) {
-      setUser(null);
-      setToken(null);
-      setLoading(false);
-      return;
-    }
-    try {
-      const data = await getMe(stored);
-      setToken(stored);
-      setUser(data.user);
-    } catch {
-      window.localStorage.removeItem("hoh-token");
-      setUser(null);
-      setToken(null);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUserState] = useState<User | null>(null);
+  const [ready, setReady] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    refresh();
-  }, [refresh]);
+    let active = true;
+    api
+      .get<User>("/api/auth/me")
+      .then((response) => {
+        if (active) setUserState(response.data);
+      })
+      .catch(() => {
+        if (active) setUserState(null);
+      })
+      .finally(() => {
+        if (active) setReady(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
-  const login = async (email: string, password: string) => {
-    const data = await api<{ token: string; user: User }>("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-    window.localStorage.setItem("hoh-token", data.token);
-    setToken(data.token);
-    const profile = await getMe(data.token);
-    setUser(profile.user);
-    return profile.user;
-  };
-
-  const register = async (payload: Record<string, string>) => {
-    const data = await api<{ token: string; user: User }>("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
-    window.localStorage.setItem("hoh-token", data.token);
-    setToken(data.token);
-    const profile = await getMe(data.token);
-    setUser(profile.user);
-    return profile.user;
-  };
-
-  const logout = () => {
-    window.localStorage.removeItem("hoh-token");
-    setToken(null);
-    setUser(null);
-  };
-
-  const value = useMemo(
-    () => ({ user, token, loading, login, register, logout, refresh }),
-    [user, token, loading, refresh]
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      ready,
+      setUser: setUserState,
+      login: async (email, password) => {
+        const response = await api.post<{ access_token: string; user: User }>("/api/auth/login", { email, password });
+        setToken(response.data.access_token);
+        setUserState(response.data.user);
+        return response.data.user;
+      },
+      register: async (payload) => {
+        const response = await api.post<{ access_token: string; user: User }>("/api/auth/register", payload);
+        setToken(response.data.access_token);
+        setUserState(response.data.user);
+        return response.data.user;
+      },
+      logout: () => {
+        setToken(null);
+        setUserState(null);
+        router.push("/");
+      },
+    }),
+    [ready, router, user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
+  const value = useContext(AuthContext);
+  if (!value) throw new Error("useAuth must be used within AuthProvider");
+  return value;
 }

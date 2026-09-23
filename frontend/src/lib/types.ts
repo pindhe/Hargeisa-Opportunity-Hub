@@ -1,125 +1,218 @@
-export type Role = "student" | "job_seeker" | "organization" | "admin";
+export type User = {
+  id: string;
+  full_name: string;
+  username: string;
+  email: string;
+  profile_image: string | null;
+  phone: string | null;
+  location: string | null;
+  university: string | null;
+  faculty: string | null;
+  department: string | null;
+  graduation_year: number | null;
+  education_level: string | null;
+  skills: string[];
+  interests: string[];
+  preferred_categories: string[];
+  preferred_locations: string[];
+  bio: string | null;
+  role: "STUDENT" | "GRADUATE" | "PROFESSIONAL" | "ADMIN" | string;
+  is_verified: boolean;
+  onboarding_complete: boolean;
+  created_at: string;
+  updated_at: string;
+};
 
-export type DeadlineTone = "green" | "yellow" | "red" | "gray";
+export type PublicUser = {
+  username: string;
+  full_name: string;
+  profile_image: string | null;
+  location: string | null;
+  university: string | null;
+  faculty: string | null;
+  department: string | null;
+  graduation_year: number | null;
+  education_level: string | null;
+  skills: string[];
+  interests: string[];
+  bio: string | null;
+  role: string;
+};
 
-export type OrganizationSummary = {
-  id: number;
+export type Organization = {
+  id: string;
   name: string;
   slug: string;
   logo: string | null;
   verified: boolean;
   location: string | null;
-  isSample: boolean;
+  description: string;
+  website: string | null;
+  email: string | null;
+  phone: string | null;
+  created_at?: string;
+  opportunity_count: number;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  color: string;
+  opportunity_count: number;
 };
 
 export type Opportunity = {
-  id: number;
+  id: string;
   title: string;
   slug: string;
-  category: string;
-  description: string;
-  requirements?: string | null;
-  benefits?: string | null;
-  applicationProcess?: string | null;
-  requiredDocuments: string[];
-  importantDates: Record<string, unknown>;
+  short_description: string;
+  description?: string;
+  organization: Organization;
+  category: Category;
+  opportunity_type: string;
   location: string;
-  opportunityType: string;
-  fundingType?: string | null;
-  educationLevel?: string | null;
-  field?: string | null;
-  skills: string[];
-  openingDate?: string | null;
-  deadline: string;
-  interviewDate?: string | null;
-  resultDate?: string | null;
-  applicationUrl?: string | null;
-  applicationMode: string;
-  contactEmail?: string | null;
-  status: string;
-  lifecycle: string;
-  deadlineTone: DeadlineTone;
-  featured: boolean;
-  verified: boolean;
-  isSample: boolean;
-  viewCount: number;
-  createdAt: string;
+  country: string;
+  is_remote: boolean;
+  deadline: string | null;
+  start_date?: string | null;
+  end_date?: string | null;
+  image: string | null;
   tags: string[];
-  organization: OrganizationSummary;
-  saved?: boolean;
-  matchScore?: number;
-  matchReasons?: string[];
-  explanation?: string;
+  skills: string[];
+  education_levels?: string[];
+  eligibility?: string;
+  requirements?: string;
+  benefits?: string;
+  application_url?: string;
+  featured: boolean;
+  status: string;
+  views: number;
+  created_at: string;
+  updated_at?: string;
+  bookmarked: boolean;
+  application_status: string | null;
+  days_remaining: number | null;
+  recommendation_reason?: string | null;
 };
 
-export type Pagination = {
-  page: number;
-  pageSize: number;
+export type PageResult = {
+  items: Opportunity[];
   total: number;
-  totalPages: number;
+  page: number;
+  page_size: number;
 };
 
-export type Paginated<T> = {
-  items: T[];
-  pagination: Pagination;
+export type Application = {
+  id: string;
+  status: string;
+  notes: string;
+  applied_at: string | null;
+  updated_at: string;
+  opportunity: Opportunity;
 };
 
-export type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: Role;
-  profileImage: string | null;
-  location: string | null;
-  phone?: string | null;
-  emailVerified: boolean;
-  locale: string;
-  organizationId: number | null;
-  skills?: string[];
-  interests?: string[];
-  completeness?: number;
-  profile?: {
-    educationLevel?: string | null;
-    university?: string | null;
-    degree?: string | null;
-    field?: string | null;
-    graduationYear?: number | null;
-    gpa?: string | null;
-    careerGoals?: string | null;
-    preferredLocations?: string[];
-    preferredCategories?: string[];
-    emailNotifications?: boolean;
-    inAppNotifications?: boolean;
-    browserNotifications?: boolean;
-    deadlineReminders?: boolean;
-    recommendationEmails?: boolean;
-  } | null;
-  languages?: { language: string; level: string }[];
-  experiences?: {
-    id: number;
-    organization: string;
-    position: string;
-    startDate: string;
-    endDate?: string | null;
-    description?: string | null;
-  }[];
-};
-
-export type NotificationItem = {
-  id: number;
+export type Notification = {
+  id: string;
   title: string;
   message: string;
   type: string;
-  read: boolean;
-  link?: string | null;
-  createdAt: string;
+  link: string | null;
+  is_read: boolean;
+  created_at: string;
 };
 
-export type ApplicationItem = {
-  id: number;
-  status: string;
-  appliedAt?: string | null;
-  notes?: string | null;
-  createdAt: string;
-  opportunity: Opportunity;
+export type HomePayload = {
+  stats: { opportunities: number; organizations: number; students: number; platforms: number };
+  latest: Opportunity[];
+  closing_soon: Opportunity[];
+  featured: Opportunity[];
+  categories: Category[];
+  organizations: Organization[];
+  announcement: string;
 };
+
+export type SearchPayload = {
+  query: string;
+  opportunities: Opportunity[];
+  organizations: Organization[];
+  related_categories: Category[];
+  suggestions: string[];
+  total: number;
+};
+
+export type ChatMessage = {
+  id: string;
+  role: "user" | "assistant" | string;
+  content: string;
+  opportunities: Opportunity[];
+  created_at: string;
+};
+
+export type Conversation = {
+  id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
+  messages?: ChatMessage[];
+};
+
+export const OPPORTUNITY_TYPES = [
+  "SCHOLARSHIP",
+  "JOB",
+  "INTERNSHIP",
+  "COURSE",
+  "TRAINING",
+  "HACKATHON",
+  "COMPETITION",
+  "FELLOWSHIP",
+  "VOLUNTEERING",
+  "EVENT",
+] as const;
+
+export const APPLICATION_STATUSES = ["SAVED", "PLANNED", "APPLIED", "INTERVIEW", "ACCEPTED", "REJECTED"] as const;
+
+export const EDUCATION_LEVELS = ["High School", "Diploma", "Bachelor", "Master", "PhD"] as const;
+
+export const INTERESTS = [
+  "Software Engineering",
+  "Artificial Intelligence",
+  "Business",
+  "Medicine",
+  "Engineering",
+  "Finance",
+  "Design",
+  "Education",
+  "Agriculture",
+  "Research",
+] as const;
+
+export const SKILL_OPTIONS = [
+  "Python",
+  "TypeScript",
+  "React",
+  "AI",
+  "Communication",
+  "Research",
+  "Excel",
+  "Finance",
+  "Design",
+  "Medicine",
+  "Agriculture",
+  "Education",
+  "Engineering",
+  "Leadership",
+] as const;
+
+export const LOCATION_OPTIONS = ["Hargeisa", "Somaliland", "Somalia", "Africa", "International", "Remote"] as const;
+
+export const SUGGESTED_QUESTIONS = [
+  "Find scholarships for software engineering students.",
+  "What internships are available in Hargeisa?",
+  "Show me opportunities closing this week.",
+  "Which opportunities match my skills?",
+  "I am a university student interested in AI. What should I apply for?",
+  "Help me prepare for the Telesom internship.",
+];

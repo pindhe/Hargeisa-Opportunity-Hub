@@ -1,46 +1,37 @@
-import type { Opportunity, Paginated, User } from "./types";
+import axios from "axios";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+import { API_URL } from "@/lib/utils";
+import { getToken, setToken } from "@/lib/token";
 
-export class ApiError extends Error {
-  status: number;
-  constructor(message: string, status: number) {
-    super(message);
-    this.status = status;
+export const api = axios.create({ baseURL: API_URL });
+
+api.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-}
+  return config;
+});
 
-export async function api<T>(
-  path: string,
-  options: RequestInit & { token?: string | null } = {}
-): Promise<T> {
-  const headers = new Headers(options.headers);
-  if (!(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401 && getToken()) {
+      setToken(null);
+    }
+    return Promise.reject(error);
+  },
+);
+
+export function errorMessage(error: unknown) {
+  if (axios.isAxiosError(error)) {
+    const detail = error.response?.data?.detail;
+    if (typeof detail === "string") return detail;
+    if (Array.isArray(detail)) {
+      return detail
+        .map((item) => (typeof item === "object" && item && "msg" in item ? String(item.msg) : "Invalid input"))
+        .join(" ");
+    }
   }
-  if (options.token) headers.set("Authorization", `Bearer ${options.token}`);
-
-  const res = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-    cache: options.cache,
-  });
-
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new ApiError(data.error || "Something went wrong. Please try again.", res.status);
-  }
-  return data as T;
-}
-
-export function getOpportunityList(params: Record<string, string | number | undefined>, token?: string | null) {
-  const search = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== "") search.set(key, String(value));
-  });
-  return api<Paginated<Opportunity>>(`/api/opportunities?${search.toString()}`, { token });
-}
-
-export function getMe(token: string) {
-  return api<{ user: User }>("/api/profile", { token });
+  return "Something went wrong. Please try again.";
 }

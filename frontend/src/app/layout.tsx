@@ -1,38 +1,25 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
-import "./globals.css";
-import { Providers } from "@/components/Providers";
+import { Fraunces, Geist } from "next/font/google";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
-  subsets: ["latin"],
-});
+import { Providers } from "@/components/providers";
+import { Shell } from "@/components/shell";
+import "./globals.css";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
+const display = Fraunces({ subsets: ["latin"], variable: "--font-display" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  title: {
-    default: "Hargeisa Opportunity Hub",
-    template: "%s | Hargeisa Opportunity Hub",
-  },
-  description:
-    "Discover scholarships, internships, jobs, courses, competitions and training opportunities for students and young professionals in Hargeisa, Somaliland.",
-  openGraph: {
-    title: "Hargeisa Opportunity Hub",
-    description: "Discover Opportunities. Build Your Future.",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Hargeisa Opportunity Hub",
-    description: "Discover Opportunities. Build Your Future.",
-  },
+  title: { default: "HOH — Hargeisa Opportunity Hub", template: "%s · HOH" },
+  description: "Scholarships, jobs, internships, courses, hackathons and more — all in one place.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${plusJakarta.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-background font-sans text-foreground">
-        <Providers>{children}</Providers>
+    <html lang="en" className={`${geist.variable} ${display.variable} h-full antialiased`}>
+      <body className="min-h-full bg-background text-foreground">
+        <Providers>
+          <Shell>{children}</Shell>
+        </Providers>
       </body>
     </html>
   );
